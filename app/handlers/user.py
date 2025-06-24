@@ -55,7 +55,7 @@ async def reg_lastname(message: types.Message, state: FSMContext):
     await add_user(
         tg_id=message.from_user.id,
         name=data['name'],
-        last_name=data['last_name']
+        last_name=data['last_name'],
     )
     await state.clear()
     await message.answer(

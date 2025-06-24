@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import asyncio
 from aiogram import Bot, Dispatcher
 
-from app.handlers.user  import router
+from app.handlers.user import router
 from app.database.models import async_main
 
 load_dotenv()

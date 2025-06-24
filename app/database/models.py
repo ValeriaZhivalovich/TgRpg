@@ -30,6 +30,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     tg_id: Mapped[int] = mapped_column(BigInteger, unique=True, nullable=False)
     username: Mapped[str] = mapped_column(String(50), nullable=True)
+    last_name:Mapped[str] = mapped_column(String(150), nullable=True)
     hp: Mapped[int] = mapped_column(Integer, default=100)  # Здоровье
     energy: Mapped[int] = mapped_column(Integer, default=50)  # Энергия
     level: Mapped[int] = mapped_column(Integer, default=1)  # Уровень

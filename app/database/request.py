@@ -26,13 +26,9 @@ async def set_user(session, tg_id):
 async def add_user(session, tg_id, name, last_name, contact=None):
     new_user = User(
         tg_id=tg_id,
-        name=name,
+        username=name,
         last_name=last_name,
-        phone_number=contact,
-        hp=100,       # Начальное здоровье
-        level=1,      # Начальный уровень
-        xp=0,         # Начальный опыт
-        gold=0        # Начальное золото
+        phone_number=contact
     )
     session.add(new_user)
     await session.commit()
