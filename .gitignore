@@ -1,0 +1,25 @@
+
+# Исключаем файлы среды разработки
+.venv/
+*.code-workspace
+
+*.sqllite3
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.swp
+
+# Файлы ОС
+.DS_Store
+Thumbs.db
+
+# Конфигурационные файлы сред разработки
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Папка с кэшем
+.cache/
