@@ -2,6 +2,8 @@
 # Исключаем файлы среды разработки
 .venv/
 *.code-workspace
+git rm -r --cached foldername/
+
 
 *.sqllite3
 

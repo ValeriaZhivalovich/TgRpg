@@ -23,7 +23,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
     user = await set_user(message.from_user.id)
     if user:
         await message.answer(
-            f"С возвращением, <b>{user.name}!</b> 🎮\n"
+            f"С возвращением, <b>{user.username}!</b> 🎮\n"
             "Вы готовы продолжить своё путешествие?",
             parse_mode="HTML",
             reply_markup=kb.menu

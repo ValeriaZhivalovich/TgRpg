@@ -27,8 +27,7 @@ async def add_user(session, tg_id, name, last_name, contact=None):
     new_user = User(
         tg_id=tg_id,
         username=name,
-        last_name=last_name,
-        phone_number=contact
+        last_name=last_name
     )
     session.add(new_user)
     await session.commit()
