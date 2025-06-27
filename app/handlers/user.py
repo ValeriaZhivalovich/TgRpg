@@ -8,7 +8,7 @@ from aiogram.fsm.state import StatesGroup, State
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.request import set_user, add_user
-from app.database.logic import complete_task, add_skill_xp 
+from app.database.logic import *
 import app.keyboards as kb
 
 router = Router()
@@ -26,7 +26,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
             f"С возвращением, <b>{user.username}!</b> 🎮\n"
             "Вы готовы продолжить своё путешествие?",
             parse_mode="HTML",
-            reply_markup=kb.menu
+            reply_markup=kb.menu_kb
         )
         await state.clear()
     else:
@@ -66,18 +66,117 @@ async def reg_lastname(message: types.Message, state: FSMContext):
         reply_markup=kb.menu
     )
 
-@router.message(Command("complete"))
-async def cmd_complete(message: types.Message, session: AsyncSession):
-    task_id = int(message.text.split()[1])  # Получаем ID задачи из сообщения
-    result = await complete_task(session, task_id)
-    await message.answer(result)
 
-@router.message(Command("add_skill"))
-async def cmd_add_skill(message: types.Message, session: AsyncSession):
-    _, skill_name, xp = message.text.split()
-    xp = int(xp)
-    result = await add_skill_xp(session, message.from_user.id, skill_name, xp)
-    await message.answer(result)
+
+# === Главное меню ===
+@router.message(F.text == "🧝‍♀️ Профиль")
+async def show_profile(message: Message):
+    tg_id = message.from_user.id
+
+    user = await get_user_by_tg_id(tg_id)
+
+    if not user:
+        await message.answer("❌ Ваш профиль не найден. Используйте /start чтобы зарегистрироваться.")
+        return
+
+    stats_text = (
+        f"🧙‍♂️ <b>Ваш герой</b>\n"
+        f"Уровень: {user.level}\n"
+        f"⚡ Энергия: {user.energy}/50\n"
+        f"❤ Здоровье: {user.hp}/100\n"
+        f"✨ Опыт: {user.xp}/{user.level * 100}\n"
+        f"💰 Золото: {user.gold}"
+    )
+
+    await message.answer(stats_text,parse_mode="HTML", reply_markup=kb.profile_kb)
+
+
+# === Подменю профиля ===
+@router.callback_query(F.data == 'skills')
+async def show_skills(call: CallbackQuery):
+    await call.message.edit_text("🔮 Здесь будут ваши навыки...")
+
+
+@router.callback_query(F.data == 'achievements')
+async def show_achievements(call: CallbackQuery):
+    await call.message.edit_text("🏆 Вы пока ничего не достигли...")
+
+
+@router.callback_query(F.data == 'inventory')
+async def show_inventory(call: CallbackQuery):
+    await call.message.edit_text("🎒 Ваш инвентарь пуст...")
+
+
+@router.callback_query(F.data == 'my_pets')
+async def show_pets(call: CallbackQuery):
+    await call.message.edit_text("🐶 У вас нет питомцев...")
+
+
+# === Кнопка "Список задач" ===
+@router.message(F.text == "📜 Список задач")
+async def show_tasks_menu(message: Message):
+    await message.answer("📋 Выберите тип задач:", reply_markup=kb.tasks_kb)
+
+
+# === Подменю задач ===
+@router.callback_query(F.data == 'active_task')
+async def show_active_tasks(call: CallbackQuery):
+    await call.message.edit_text("✅ Активные задачи:\n— Почистить зубы\n— Сделать зарядку", reply_markup=kb.active_task_kb)
+
+
+@router.callback_query(F.data == 'complite_task')
+async def show_completed_tasks(call: CallbackQuery):
+    await call.message.edit_text("❌ Завершённых задач пока нет.", reply_markup=kb.tasks_kb)
+
+
+@router.callback_query(F.data == 'creste_task')
+async def create_new_task(call: CallbackQuery):
+    await call.message.edit_text("📝 Введите название новой задачи...")
+
+
+# === Подменю активной задачи ===
+@router.callback_query(F.data == 'delete_active_task')
+async def delete_task(call: CallbackQuery):
+    await call.message.edit_text("🗑 Задача удалена.", reply_markup=kb.tasks_kb)
+
+
+@router.callback_query(F.data == 'change_active_task')
+async def edit_task(call: CallbackQuery):
+    await call.message.edit_text("✍️ Введите новое описание задачи...")
+
+
+# === Кнопка "Рынок" ===
+@router.message(F.text == "⚖️ Рынок")
+async def show_market(message: Message):
+    await message.answer("🛍 Добро пожаловать на рынок!", reply_markup=kb.market_kb)
+
+
+# === Подменю рынка ===
+@router.callback_query(F.data == 'market_potion')
+async def show_potions(call: CallbackQuery):
+    await call.message.edit_text("🧪 Зелья:\n— Зелье энергии (+10)\n— Зелье здоровья (+10)")
+
+
+@router.callback_query(F.data == 'market_pets')
+async def show_pets_shop(call: CallbackQuery):
+    await call.message.edit_text("🐶 Питомцы:\n— Котик\n— Щенок\n— Черепашка")
+
+
+@router.callback_query(F.data == 'market_ticket')
+async def show_tickets(call: CallbackQuery):
+    await call.message.edit_text("🎟 Билеты:\n— На турнир\n— В подземелье")
+
+
+# === Кнопка "Боссы/Квесты" ===
+@router.message(F.text == "⚔️ Боссы/Квесты")
+async def show_bosses(message: Message):
+    await message.answer("👹 Здесь будут боссы и квесты!")
+
+
+# === Кнопка "Настройки" ===
+@router.message(F.text == "⚙️ Настройки")
+async def show_settings(message: Message):
+    await message.answer("🛠 Здесь будут настройки!")
 
 
 

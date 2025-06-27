@@ -50,6 +50,7 @@ class Task(Base):
     completed: Mapped[bool] = mapped_column(Boolean, default=False)  # Выполнена ли задача?
     reward_xp: Mapped[int] = mapped_column(Integer, default=10)  # Награда за выполнение (опыт)
     reward_gold: Mapped[int] = mapped_column(Integer, default=5)  # Награда за выполнение (золото)
+    skill_id: Mapped[int] = mapped_column(ForeignKey('skills.id'), nullable=False)
 
 class Skill(Base):
     __tablename__ = 'skills'

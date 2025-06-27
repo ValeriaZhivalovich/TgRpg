@@ -23,7 +23,7 @@ async def set_user(session, tg_id):
 
 
 @connection
-async def add_user(session, tg_id, name, last_name, contact=None):
+async def add_user(session, tg_id, name, last_name):
     new_user = User(
         tg_id=tg_id,
         username=name,

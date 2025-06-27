@@ -15,8 +15,6 @@ if not TOKEN:
     logger.error("Токен не найден! .env файл")
     raise ValueError("Токен бота не найден!")
 
-
-
 async def main():
     await async_main()
 

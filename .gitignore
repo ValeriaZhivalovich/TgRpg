@@ -28,4 +28,5 @@ Thumbs.db
 
 *.pyc
 __pycache__/
+
 RbgBotDb.sqlite3

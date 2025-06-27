@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database.models import User, Task, Skill
+from app.database.models import *
+from sqlalchemy.future import select
 
 # Логика выполнения задачи
 async def complete_task(session: AsyncSession, task_id: int):
@@ -45,10 +46,13 @@ async def add_skill_xp(session: AsyncSession, user_id: int, skill_name: str, xp:
     await session.commit()
     return f"Навык '{skill_name}' повышен до уровня {skill.level}!"
 
-
-# Получение пользователя по ID
-async def get_user(tg_id: int, session: AsyncSession):
-    return await session.query(User).filter_by(tg_id=tg_id).first()
+async def get_user_by_tg_id(tg_id: int) -> User | None:
+    async with async_session() as session:
+        result = await session.execute(
+            select(User).where(User.tg_id == tg_id)
+        )
+        user = result.scalars().first()
+        return user
 
 # Добавление нового пользователя
 async def add_user(tg_id: int, name: str, last_name: str, session: AsyncSession):

@@ -1,71 +1,71 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import CallbackQuery
 
 
-menu = ReplyKeyboardMarkup(
+menu_kb = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text="📜 Список задач"),
-            KeyboardButton(text="🧝‍♀️ Профиль")
+            KeyboardButton(text="📜 Список задач", callback_data = 'tasks' ),
+            KeyboardButton(text="🧝‍♀️ Профиль", callback_data='profile')
         ],
         [
-            KeyboardButton(text="⚖️ Рынок"),
-            KeyboardButton(text="⚔️ Боссы/Квесты")
+            KeyboardButton(text="⚖️ Рынок", callback_data = 'market'),
+            KeyboardButton(text="⚔️ Боссы/Квесты", callback_data = 'boss')
         ],
         [
-            KeyboardButton(text="⚙️ Настройки")
+            KeyboardButton(text="⚙️ Настройки", callback_data = 'options')
         ]
     ],
     resize_keyboard=True
 )
 
-profile = ReplyKeyboardMarkup(
-    keyboard=[
+profile_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
         [
-            KeyboardButton(text="🏹 Навыки"),
-            KeyboardButton(text="🏆 Достижения")
+            InlineKeyboardButton(text="🏹 Навыки", callback_data = 'skills'),
+            InlineKeyboardButton(text="🏆 Достижения", callback_data = 'achievements')
         ],
         [
-            KeyboardButton(text="🎒 Инвентарь"),
-            KeyboardButton(text="🐶 Питомцы")
+            InlineKeyboardButton(text="🎒 Инвентарь", callback_data = 'inventory'),
+            InlineKeyboardButton(text="🐶 Питомцы", callback_data = 'my_pets')
         ]
     ],
     resize_keyboard=True
 )
 
-tasks = ReplyKeyboardMarkup(
-    keyboard=[
+tasks_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
         [
-            KeyboardButton(text="✅ Текущие"),
-            KeyboardButton(text="❌ Завершенные")
+            InlineKeyboardButton(text="✅ Текущие", callback_data = 'active_task'),
+            InlineKeyboardButton(text="❌ Завершенные", callback_data = 'complite_task')
         ],
         [
-            KeyboardButton(text="📝 Создать задачу"),
+            InlineKeyboardButton(text="📝 Создать задачу", callback_data = 'creste_task'),
         ]
     ],
     resize_keyboard=True
 )
 
-active_task = ReplyKeyboardMarkup(
-    keyboard=[
+active_task_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
         [
-            KeyboardButton(text="❌ Удалить"),
-            KeyboardButton(text="⭕️ Изменить")
+            InlineKeyboardButton(text="❌ Удалить", callback_data = 'delete_active_task'),
+            InlineKeyboardButton(text="⭕️ Изменить", callback_data = 'change_active_task')
         ],
     ],
     resize_keyboard=True
 )
 
-market = ReplyKeyboardMarkup(
-    keyboard=[
+market_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
         [
-            KeyboardButton(text="✨ Зелья"),
-            KeyboardButton(text="🐶 Питомцы")
+            InlineKeyboardButton(text="✨ Зелья", callback_data = 'market_potion'),
+            InlineKeyboardButton(text="🐶 Питомцы", callback_data = 'market_pets')
         ],
         [
-            KeyboardButton(text="🎟 Билеты"),
+            InlineKeyboardButton(text="🎟 Билеты", callback_data = 'market_ticket'),
         ]
     ],
     resize_keyboard=True
 )
-
