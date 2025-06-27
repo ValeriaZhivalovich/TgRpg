@@ -7,8 +7,7 @@ from aiogram.fsm.state import StatesGroup, State
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.request import set_user, add_user
-from app.database.logic import *
+from app.database.request import *
 import app.keyboards as kb
 
 router = Router()
@@ -73,7 +72,7 @@ async def reg_lastname(message: types.Message, state: FSMContext):
 async def show_profile(message: Message):
     tg_id = message.from_user.id
 
-    user = await get_user_by_tg_id(tg_id)
+    user = await set_user(tg_id)
 
     if not user:
         await message.answer("❌ Ваш профиль не найден. Используйте /start чтобы зарегистрироваться.")
@@ -107,7 +106,7 @@ async def show_inventory(call: CallbackQuery):
     tg_id = call.from_user.id
 
     async with async_session() as session:
-        user = await get_user_by_tg_id(tg_id)
+        user = await set_user(tg_id)
 
         if not user:
             await call.message.answer("❌ Ваш профиль не найден. Используйте /start чтобы зарегистрироваться.")

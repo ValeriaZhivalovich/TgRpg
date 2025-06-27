@@ -1,8 +1,7 @@
 from app.database.models import async_session
-from app.database.models import User
+from app.database.models import *
 from sqlalchemy import select, update
-from sqlalchemy.orm import selectinload
-
+from sqlalchemy.orm import selectinload, joinedload
 
 
 def connection(func):
@@ -32,4 +31,11 @@ async def add_user(session, tg_id, name, last_name):
     session.add(new_user)
     await session.commit()
     return new_user
+
+@connection
+async def get_inventory(session, user_id: int):
+    result =await session.scalars(
+        select(InventoryItem).options(joinedload(InventoryItem.item)).where(InventoryItem.user_id == user_id)
+    )
+    return result.unique().all()
 
