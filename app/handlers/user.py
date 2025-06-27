@@ -63,7 +63,7 @@ async def reg_lastname(message: types.Message, state: FSMContext):
         "Ваше имя занесено в Базу Гильдии. Что дальше?\n\n"
         "Выберите действие:",
         parse_mode="HTML",
-        reply_markup=kb.menu
+        reply_markup=kb.menu_kb
     )
 
 
@@ -104,8 +104,33 @@ async def show_achievements(call: CallbackQuery):
 
 @router.callback_query(F.data == 'inventory')
 async def show_inventory(call: CallbackQuery):
-    await call.message.edit_text("🎒 Ваш инвентарь пуст...")
+    tg_id = call.from_user.id
 
+    async with async_session() as session:
+        user = await get_user_by_tg_id(tg_id)
+
+        if not user:
+            await call.message.answer("❌ Ваш профиль не найден. Используйте /start чтобы зарегистрироваться.")
+            return
+
+        inventory_items = await get_inventory(user.id)
+
+        if not inventory_items:
+            await call.message.edit_text("🎒 Ваш инвентарь пуст...")
+            return
+
+        inventory_text = "🎒 <b>Ваш инвентарь:</b>\n\n"
+        for inv_item in inventory_items:
+            item = inv_item.item  # ✅ Теперь это Item, а inv_item — InventoryItem
+            status = "одет" if inv_item.equipped else "не одет"
+            inventory_text += (
+                f"▫️ <b>{item.name}</b> x{inv_item.quantity}\n"
+                f"   — {item.description or 'Без описания'}\n"
+                f"   — Статус: {status}\n\n"
+            )
+
+    await call.message.edit_text(inventory_text, parse_mode="HTML")
+    await call.answer()
 
 @router.callback_query(F.data == 'my_pets')
 async def show_pets(call: CallbackQuery):
