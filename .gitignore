@@ -1,32 +1,7 @@
-
-# Исключаем файлы среды разработки
-.venv/
-*.code-workspace
-git rm -r --cached foldername/
-
-
-*.sqllite3
-
-# Логи и временные файлы
-*.log
-*.tmp
-*.swp
-
-# Файлы ОС
-.DS_Store
-Thumbs.db
-
-# Конфигурационные файлы сред разработки
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-
-# Папка с кэшем
-.cache/
-
-*.pyc
 __pycache__/
-
-RbgBotDb.sqlite3
+*.pyc
+*.sqlite3
+.env
+.venv
+venv
+logs/*.log
